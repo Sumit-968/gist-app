@@ -1,0 +1,11 @@
+# Secrets
+.env
+youtube_cookies.txt
+*.pem
+*.key
+
+# Heavy Folders
+node_modules/
+venv/
+__pycache__/
+.DS_Store
