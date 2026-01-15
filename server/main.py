@@ -6,9 +6,11 @@ from services.ai import AIService
 
 app = FastAPI()
 
+# Allow connection from ANYWHERE (Vercel, Localhost, etc.)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"], 
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -26,15 +28,18 @@ class VideoRequest(BaseModel):
 @app.post("/api/generate")
 async def generate_notes(request: VideoRequest):
     # 1. Fetch Transcript
-    print("Fetching transcript...")
+    print(f"Fetching transcript for: {request.url}")
     transcript_text, error = transcript_service.get_transcript(request.url)
+    
     if error:
+        # Extract error message safely
         error_msg = error.get('error') if isinstance(error, dict) else str(error)
         raise HTTPException(status_code=400, detail=error_msg)
 
     # 2. Generate AI Notes
     print("Generating AI notes...")
     ai_notes, ai_error = ai_service.generate_notes(transcript_text)
+    
     if ai_error:
         raise HTTPException(status_code=500, detail=f"AI Error: {ai_error}")
 
@@ -45,4 +50,4 @@ async def generate_notes(request: VideoRequest):
 
 @app.get("/")
 def read_root():
-    return {"message": "Gist Backend Online"}
+    return {"message": "Gist Backend is Live & Running"}

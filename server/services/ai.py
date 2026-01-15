@@ -13,7 +13,7 @@ class AIService:
         
         genai.configure(api_key=api_key)
         
-        # Use the fast and free-tier friendly Gemini 1.5 Flash
+        # Use the fast and powerful Gemini 2.5 Flash
         self.model = genai.GenerativeModel('gemini-2.5-flash')
 
     def generate_notes(self, transcript_text: str):
@@ -22,7 +22,7 @@ class AIService:
         Analyze the following video transcript and generate comprehensive Cornell Notes.
         
         Transcript:
-        {transcript_text[:25000]}  # Limit characters to avoid token limits for now
+        {transcript_text[:25000]}  # Limit characters to avoid token limits
 
         Output Format (Markdown):
         
@@ -45,12 +45,9 @@ class AIService:
         """
 
         try:
-            # Add this print to confirm we are sending the request
             print(f"Sending {len(transcript_text)} chars to Gemini...")
-            
             response = self.model.generate_content(prompt)
             return response.text, None
         except Exception as e:
-            # CRITICAL: Print the actual error to the terminal
             print(f"\n❌ AI GENERATION FAILED: {str(e)}\n") 
             return None, str(e)

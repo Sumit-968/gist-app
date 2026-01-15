@@ -3,7 +3,7 @@
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw"; // <--- 1. IMPORT THIS
+import rehypeRaw from "rehype-raw";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -22,7 +22,10 @@ export default function Home() {
     setStatus("fetching");
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/generate", {
+      // DYNAMIC URL: Uses environment variable if live, otherwise localhost
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+      
+      const response = await fetch(`${apiUrl}/api/generate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: url }),
@@ -41,7 +44,7 @@ export default function Home() {
       
     } catch (error) {
       console.error(error);
-      alert("Failed to connect to server.");
+      alert("Failed to connect to server. Check console for details.");
     } finally {
       setIsLoading(false);
     }
@@ -110,7 +113,7 @@ export default function Home() {
                 <article className="prose prose-slate prose-lg max-w-none">
                   <ReactMarkdown 
                     remarkPlugins={[remarkGfm]} 
-                    rehypePlugins={[rehypeRaw]} // <--- 2. ACTIVATE HTML PARSING HERE
+                    rehypePlugins={[rehypeRaw]}
                     components={{
                       h1: ({node, ...props}) => <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-6 pb-2 border-b border-slate-100" {...props} />,
                       h2: ({node, ...props}) => <h2 className="text-xl font-semibold text-slate-800 mt-8 mb-4 flex items-center gap-2" {...props} />,
