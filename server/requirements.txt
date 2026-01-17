@@ -37,3 +37,7 @@ uritemplate==4.2.0
 urllib3==2.6.3
 uvicorn==0.40.0
 youtube-transcript-api==1.2.3
+
+# NEW DEPENDENCIES FOR BETA FEATURES
+yt-dlp==2024.12.13
+python-multipart==0.0.6

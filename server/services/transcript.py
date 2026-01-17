@@ -2,7 +2,11 @@ import os
 import re
 import logging
 import requests
+import urllib3
 from typing import Tuple, Optional, Dict
+
+# 1. Disable the "InsecureRequestWarning" so your terminal stays clean
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -14,17 +18,12 @@ class TranscriptService:
     """
     
     def __init__(self):
-        # We try to get the key from the environment, but if you are testing locally
-        # and haven't set it, we warn you.
         self.api_key = os.getenv("RAPID_API_KEY")
         if not self.api_key:
             logger.warning("RAPID_API_KEY is missing! Transcripts will fail.")
 
     @staticmethod
     def extract_video_id(url: str) -> Optional[str]:
-        """
-        Extracts the 11-character video ID from any YouTube URL.
-        """
         patterns = [
             r'(?:v=|\/)([0-9A-Za-z_-]{11}).*',
             r'(?:youtu\.be\/)([0-9A-Za-z_-]{11})',
@@ -48,11 +47,7 @@ class TranscriptService:
 
         logger.info(f"Fetching transcript for: {video_id}")
 
-        # ---------------------------------------------------------
-        # SPECIFIC CONFIG FOR 'youtube-transcript3'
-        # ---------------------------------------------------------
         url = "https://youtube-transcript3.p.rapidapi.com/api/transcript"
-        
         querystring = {"videoId": video_id}
         
         headers = {
@@ -61,7 +56,8 @@ class TranscriptService:
         }
 
         try:
-            response = requests.get(url, headers=headers, params=querystring)
+            # 2. KEY CHANGE: verify=False tells Python to accept the company proxy certificate
+            response = requests.get(url, headers=headers, params=querystring, verify=False)
             
             if response.status_code == 403:
                 return None, {'error': 'API Key invalid or quota exceeded.', 'code': 'API_LIMIT'}
@@ -72,19 +68,11 @@ class TranscriptService:
 
             data = response.json()
             
-            # ---------------------------------------------------------
-            # PARSING LOGIC FOR YOUR SPECIFIC JSON FORMAT
-            # Format: { "success": true, "transcript": [ { "text": "..." }, ... ] }
-            # ---------------------------------------------------------
-            
             if not data.get('success'):
-                # Sometimes the API returns 200 but success: false
                 return None, {'error': 'Transcript not available for this video.', 'code': 'NO_TRANSCRIPT'}
 
             transcript_list = data.get('transcript', [])
-            
-            # Extract just the text from each segment and join them
-            full_text = " ".join([item.get('text', '') for item in transcript_list])
+            full_text = " ".join([str(item.get('text', '')) for item in transcript_list if item.get('text')])
 
             if not full_text:
                 return None, {'error': 'Transcript was empty.', 'code': 'EMPTY_TRANSCRIPT'}
