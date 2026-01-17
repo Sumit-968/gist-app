@@ -1,5 +1,5 @@
 import os
-import google.generativeai as genai
+import google.genai as genai
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -11,8 +11,8 @@ class AIService:
         if not api_key:
             raise ValueError("GEMINI_API_KEY not found in .env file")
         
-        # Initialize the client directly
-        self.client = genai.Client(api_key=api_key)
+        # Configure the client with the new SDK
+        genai.configure(api_key=api_key)
         
         # Set the model name (using the correct model string)
         self.model_id = 'gemini-2.5-flash'
@@ -185,7 +185,7 @@ def another_function():
 - [Line-by-line breakdown of complex parts]
 - [How this integrates with other components]
 
-## 🔧 Step-by-Step Implementation Guide
+## 📋 Step-by-Step Implementation Guide
 
 ### Step 1: [Initial Setup]
 ```bash
@@ -212,7 +212,7 @@ app.get('/api', (req, res) => {{
 ```
 [Wrap-up and testing]
 
-## 📋 Code Reference
+## 📊 Code Reference
 
 ### Key Functions/Methods
 | Function | Purpose | Parameters | Returns |
@@ -242,7 +242,7 @@ app.get('/api', (req, res) => {{
 - [Optimization tip 1]
 - [Optimization tip 2]
 
-## 🐛 Troubleshooting Guide
+## 🛠 Troubleshooting Guide
 
 ### Problem: [Common Error 1]
 **Symptom**: [What you see]
@@ -277,7 +277,7 @@ npm install express
 - **Related Topics**: [What to learn next]
 - **GitHub Repo**: [If mentioned in video]
 
-## 🔖 Quick Reference Cheatsheet
+## 📖 Quick Reference Cheatsheet
 
 ```javascript
 // Most important code snippets you'll need
@@ -350,7 +350,7 @@ Transcript:
 | [Important concept or principle 2] | [Why you should care in 1 sentence] |
 | [Critical takeaway 3] | [Practical relevance in 1 sentence] |
 
-## 🔢 By The Numbers
+## 📢 By The Numbers
 [If the video contains data, statistics, or metrics - list 3-5 most important ones]
 - **[Stat 1]**: [Context in 5 words]
 - **[Stat 2]**: [Context in 5 words]
@@ -370,7 +370,7 @@ Transcript:
 **Long-term** (This month):
 - [Bigger commitment or goal]
 
-## 🎓 Key Terms Explained
+## 📎 Key Terms Explained
 [Only include if technical terms were used - define them simply]
 - **[Term 1]**: [Simple 1-sentence definition]
 - **[Term 2]**: [Easy explanation anyone can understand]
@@ -386,7 +386,7 @@ Transcript:
 
 > [Powerful quote or key principle from the video - max 25 words]
 
-## ⏭️ What To Explore Next
+## ⭐️ What To Explore Next
 [If someone found this valuable, what should they learn about next?]
 - [Related topic 1]
 - [Deeper dive suggestion]
@@ -421,7 +421,7 @@ Transcript:
             print(f"Generating {mode} notes with {len(transcript_text)} chars...")
             
             # Generate content using the new SDK
-            response = self.client.models.generate_content(
+            response = genai.models.generate_content(
                 model=self.model_id,
                 contents=prompt
             )
