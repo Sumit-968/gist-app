@@ -728,7 +728,7 @@ export default function GistApp() {
                           </button>
 
                         {isDropdownOpen && (
-                            <div className="absolute top-full left-0 right-0 mt-2 bg-background border border-border rounded-lg shadow-lg overflow-hidden z-50">
+                            <div className="absolute top-full left-0 right-0 mt-2 bg-slate-950 dark:bg-slate-900 border border-border rounded-lg shadow-lg overflow-hidden z-50">
                               {MODE_OPTIONS.map((mode) => (
                                 <button
                                   key={mode.value}
