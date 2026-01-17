@@ -727,7 +727,7 @@ export default function GistApp() {
                             <ChevronDown className={`h-4 w-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
                           </button>
 
-                          {isDropdownOpen && (
+                        {isDropdownOpen && (
                             <div className="absolute top-full left-0 right-0 mt-2 bg-background border border-border rounded-lg shadow-lg overflow-hidden z-50">
                               {MODE_OPTIONS.map((mode) => (
                                 <button
@@ -736,8 +736,8 @@ export default function GistApp() {
                                     setSelectedMode(mode.value);
                                     setIsDropdownOpen(false);
                                   }}
-                                  className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-accent transition-colors ${
-                                    selectedMode === mode.value ? 'bg-accent' : ''
+                                  className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-accent transition-colors border-b border-border last:border-b-0 ${
+                                    selectedMode === mode.value ? 'bg-[#ff6600]/20 border-l-4 border-l-[#ff6600]' : ''
                                   }`}
                                 >
                                   <span className="text-xl">{mode.icon}</span>
